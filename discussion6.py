@@ -1,5 +1,6 @@
 import unittest
 import os
+import csv
 
 
 def load_csv(f):
@@ -19,6 +20,26 @@ def load_csv(f):
     full_path = os.path.join(base_path, f)
     # use this 'full_path' variable as the file that you open
 
+    with open(full_path, 'r') as f:
+        r = csv.reader(f)
+        rows = []
+        print("Add data from csv")
+        for row in r:
+            rows.append(row)
+            print(f"Adding {row} to rows")
+        # print(f"Rows: {rows}")
+    d = {}
+
+    headers = rows[0][1:]
+    print(f"Headers: {headers}")
+
+    for header in headers:
+        d[header] = {}
+        for row in rows[1:]:
+            d[header][row[0]] = row[1:]
+    print(d)
+        
+
 def get_annual_max(d):
     '''
     Params:
@@ -31,6 +52,9 @@ def get_annual_max(d):
     Note: Don't strip or otherwise modify strings. Do not change datatypes except where necessary.
         You'll have to change vals to int to compare them. 
     '''
+
+    print(d)
+
     pass
 
 def get_month_avg(d):
@@ -68,6 +92,12 @@ class dis7_test(unittest.TestCase):
 
 def main():
     unittest.main(verbosity=2)
+    print("----------------------------------------------------------------------")
+    flight_dict = load_csv('daily_visitors.csv')
+    print("Output of load_csv:", flight_dict, "\n")
+    print("Output of get_annual_max:", get_annual_max(flight_dict), "\n")
+    print("Output of get_month_avg:", get_month_avg(flight_dict), "\n")
+
 
 if __name__ == '__main__':
     main()
